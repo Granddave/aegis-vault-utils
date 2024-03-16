@@ -1,4 +1,5 @@
 ![ci](https://github.com/Granddave/aegis-vault-utils/actions/workflows/ci.yml/badge.svg)
+![Crates.io Version](https://img.shields.io/crates/v/aegis-vault-utils)
 
 # Aegis 2FA Authenticator Vault Utilities
 
