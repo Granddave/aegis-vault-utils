@@ -3,6 +3,7 @@ use libreauth::{hash::HashFunction, oath::TOTPBuilder};
 use serde::Deserialize;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+/// Hashing algorithm to use when generating the OTP
 #[derive(Debug, Deserialize, PartialEq, Clone, Copy)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum HashAlgorithm {
@@ -21,33 +22,55 @@ impl From<HashAlgorithm> for HashFunction {
     }
 }
 
+/// HOTP (HMAC-based One Time Pad)
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct EntryInfoHotp {
+    /// Base32 encoded secret
     pub secret: String,
+    /// Hashing algorithm to use
     pub algo: HashAlgorithm,
+    /// Number of digits in the OTP
     pub digits: i32,
+    /// The counter value to use when generating the OTP
     pub counter: u64,
 }
 
+/// Time-based One Time Pads (TOTP)
+///
+/// [RFC 6238](https://datatracker.ietf.org/doc/html/rfc6238)
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct EntryInfoTotp {
+    /// Base32 encoded secret
     pub secret: String,
+    /// Hashing algorithm to use
     pub algo: HashAlgorithm,
+    /// Number of digits in the OTP
     pub digits: i32,
+    /// The time step in seconds since the UNIX epoch
     pub period: i32,
 }
 
+/// Steam Guard OTP
+///
+/// Essentially a TOTP with a 5 digit code and 30 second period using the SHA1 hashing algorithm
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct EntryInfoSteam {
+    /// Base32 encoded secret
     pub secret: String,
-    /// Only Sha1 is supported
+    /// Number of digits in the OTP (default: 5)
     pub digits: i32,
+    /// The time step in seconds since the UNIX epoch (default: 30)
     pub period: i32,
+    // TODO: Remove digits and period from this struct since the values are fixed?
 }
 
+/// Yandex OTP
+///
+/// Not implemented.
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct EntryInfoYandex {}
 
+/// Information used to generate one time codes
 #[derive(Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type", content = "info")]
@@ -70,17 +93,24 @@ pub enum EntryInfo {
 /// Entry with metadata and information used to generate one time codes
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct Entry {
+    /// Information used to generate the OTP such as the secret and algorithm
     #[serde(flatten)]
     pub info: EntryInfo,
+    // /// A UUID (version 4)
     // pub uuid: String,
+    /// The account name
     pub name: String,
+    /// The service that the token is for
     pub issuer: String,
+    // /// A personal note about the entry
     // pub note: String,
+    // /// Whether the entry is a favorite or not
     // pub favorite: bool,
+    // /// JPEGa's encoded in Base64 with padding
     // pub icon: String,
 }
 
-/// Returns the current time since the UNIX epoch in seconds
+/// Current time since the UNIX epoch in seconds
 fn time_since_epoch() -> i32 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -88,8 +118,7 @@ fn time_since_epoch() -> i32 {
         .as_secs() as i32
 }
 
-/// Generates a one time password based on the entry information
-/// and the current time
+/// Generates a one time password based on the entry information and the current time
 ///
 /// # Arguments
 /// * `entry_info` - The information used to generate the OTP
@@ -99,8 +128,7 @@ fn time_since_epoch() -> i32 {
 /// The generated one time password
 ///
 /// # Errors
-/// Returns an error if the entry type is not implemented
-/// or if the entry information is invalid
+/// Returns an error if the entry type is not implemented or if the entry information is invalid
 pub fn generate_otp(entry_info: &EntryInfo) -> Result<String> {
     generate_otp_impl(entry_info, time_since_epoch())
 }

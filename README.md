@@ -7,16 +7,23 @@
 
 Utility crate for interacting and generating OTP codes from a backup vault from the Android app [Aegis Authenticator](https://github.com/beemdevelopment/Aegis).
 
-This was previously a part of the [aegis-rs](https://github.com/Granddave/aegis-rs) cli tool.
-
 
 ## Features
 
 - Decryption of the 256 bit AES-GCM encrypted vault 🔓
 - OTP generation 🕒
 
+## Usage
 
-# Similar projects
+See [the documentation](https://docs.rs/aegis-vault-utils).
+
+
+## Used in
+
+- [aegis-rs](https://github.com/Granddave/aegis-rs) (CLI tool)
+
+
+# Related projects
 
 - [aegis-vault](https://crates.io/crates/aegis-vault)
 

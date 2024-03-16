@@ -9,7 +9,7 @@ use crate::otp;
 /// [here](https://github.com/beemdevelopment/Aegis/blob/master/docs/vault.md#aegis-vault).
 mod crypto;
 
-/// Database containing OTP entries
+/// Database containing the user data
 #[derive(Debug, Deserialize)]
 pub struct Database {
     /// Database version
@@ -18,7 +18,7 @@ pub struct Database {
     pub entries: Vec<otp::Entry>,
 }
 
-/// Vault database as found in the JSON vault backup file
+/// Vault database as found in the JSON vault backup file. It can be either plain text or encrypted.
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum VaultDatabase {
@@ -28,12 +28,15 @@ pub enum VaultDatabase {
     Encrypted(String),
 }
 
+/// Trait for getting the password from the user or from the environment.
+///
 pub trait PasswordGetter {
-    /// Get the password from the user or from the environment
+    /// Get the password from the user or from the environment used to decrypt the vault
+    /// with [`parse_vault`].
     fn get_password(&self) -> Result<String>;
 }
 
-/// Aegis vault backup
+/// Aegis vault backup file contents
 #[derive(Debug, Deserialize)]
 pub struct Vault {
     /// Backup version
@@ -47,11 +50,12 @@ pub struct Vault {
 /// Parse vault from JSON as found in the vault backup file
 ///
 /// # Arguments
-/// * `vault_backup_contents` - JSON string containing vault backup, encrypted or not
-/// * `password_getter` - Password getter implementation
+/// - `vault_backup_contents` - JSON string containing vault backup, encrypted or not
+/// - `password_getter` - Password getter implementation. Used to get the password to decrypt the vault.
+/// Required even if the vault is not encrypted.
 ///
 /// # Returns
-/// * `Result` containing the parsed database
+/// - `Result` containing the parsed [database][`Database`]
 pub fn parse_vault(
     vault_backup_contents: &str,
     password_getter: impl PasswordGetter,
