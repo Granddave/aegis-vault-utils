@@ -1,6 +1,6 @@
 [package]
 name = "aegis-vault-utils"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 license = "GPL-3.0-or-later"
 description = "Utility for interacting and generating OTP codes from the Android app Aegis Authenticator's backup vault"
