@@ -20,7 +20,7 @@
 //! fn main() -> Result<()> {
 //!     // Read and parse the vault
 //!     let vault_backup_contents = std::fs::read_to_string("res/aegis_encrypted.json")?;
-//!     let db = parse_vault(&vault_backup_contents, EnvPasswordGetter)?;
+//!     let db = parse_vault(&vault_backup_contents, &EnvPasswordGetter)?;
 //!
 //!     // Get the first entry and generate the OTP code
 //!     let entry = db.entries.iter().next().unwrap();
@@ -54,7 +54,7 @@
 ///
 /// # fn main() -> Result<()> {
 /// let vault_backup_contents = std::fs::read_to_string("res/aegis_encrypted.json")?;
-/// let db = parse_vault(&vault_backup_contents, EnvPasswordGetter)?;
+/// let db = parse_vault(&vault_backup_contents, &EnvPasswordGetter)?;
 /// db.entries.iter().for_each(|entry| {
 ///     println!("{:?}: {:?}", entry.name, entry.issuer);
 /// });

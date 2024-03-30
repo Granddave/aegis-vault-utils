@@ -58,7 +58,7 @@ pub struct Vault {
 /// - `Result` containing the parsed [database][`Database`]
 pub fn parse_vault(
     vault_backup_contents: &str,
-    password_getter: impl PasswordGetter,
+    password_getter: &impl PasswordGetter,
 ) -> Result<Database> {
     let vault: Vault = serde_json::from_str(vault_backup_contents)?;
     if vault.version != 1 {
