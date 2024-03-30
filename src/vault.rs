@@ -76,7 +76,11 @@ pub fn parse_vault(
             db
         }
     };
-    if db.version != 2 {
+
+    // The models are delevoped for the version 2 of the database
+    // but the changes have after version 2 are not significant
+    // so we can still use the same models.
+    if db.version > 3 {
         return Err(eyre!(format!(
             "Unsupported database version: {}",
             db.version
