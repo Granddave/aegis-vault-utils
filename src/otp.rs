@@ -4,7 +4,7 @@ use serde::Deserialize;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// Hashing algorithm to use when generating the OTP
-#[derive(Debug, Deserialize, PartialEq, Clone, Copy)]
+#[derive(Debug, Deserialize, Eq, PartialEq, Clone, Copy)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum HashAlgorithm {
     Sha1,
@@ -23,7 +23,7 @@ impl From<HashAlgorithm> for HashFunction {
 }
 
 /// HOTP (HMAC-based One Time Pad)
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, Eq, PartialEq, Clone)]
 pub struct EntryInfoHotp {
     /// Base32 encoded secret
     pub secret: String,
@@ -38,7 +38,7 @@ pub struct EntryInfoHotp {
 /// Time-based One Time Pads (TOTP)
 ///
 /// [RFC 6238](https://datatracker.ietf.org/doc/html/rfc6238)
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, Eq, PartialEq, Clone)]
 pub struct EntryInfoTotp {
     /// Base32 encoded secret
     pub secret: String,
@@ -53,7 +53,7 @@ pub struct EntryInfoTotp {
 /// Steam Guard OTP
 ///
 /// Essentially a TOTP with a 5 digit code and 30 second period using the SHA1 hashing algorithm
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, Eq, PartialEq, Clone)]
 pub struct EntryInfoSteam {
     /// Base32 encoded secret
     pub secret: String,
@@ -67,11 +67,11 @@ pub struct EntryInfoSteam {
 /// Yandex OTP
 ///
 /// Not implemented.
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, Eq, PartialEq, Clone)]
 pub struct EntryInfoYandex {}
 
 /// Information used to generate one time codes
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, Eq, PartialEq, Clone)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type", content = "info")]
 pub enum EntryInfo {
@@ -91,7 +91,7 @@ pub enum EntryInfo {
 }
 
 /// Entry with metadata and information used to generate one time codes
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, Eq, PartialEq, Clone)]
 pub struct Entry {
     /// Information used to generate the OTP such as the secret and algorithm
     #[serde(flatten)]
