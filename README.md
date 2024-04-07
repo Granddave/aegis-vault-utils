@@ -1,6 +1,6 @@
-![ci](https://github.com/Granddave/aegis-vault-utils/actions/workflows/ci.yml/badge.svg)
+[![ci](https://github.com/Granddave/aegis-vault-utils/actions/workflows/ci.yml/badge.svg)](https://github.com/Granddave/aegis-vault-utils/actions)
 [![dependency status](https://deps.rs/repo/github/granddave/aegis-vault-utils/status.svg)](https://deps.rs/repo/github/granddave/aegis-vault-utils)
-![Crates.io Version](https://img.shields.io/crates/v/aegis-vault-utils)
+[![Crates.io Version](https://img.shields.io/crates/v/aegis-vault-utils)](https://crates.io/crates/aegis-vault-utils)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # Aegis 2FA Authenticator Vault Utilities
