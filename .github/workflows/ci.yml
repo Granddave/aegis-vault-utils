@@ -1,40 +1,54 @@
 ---
-name: ci
+name: Continious integration
 
 on:
-  push:
   pull_request:
+    paths-ignore:
+      - "**/*.md"
+  push:
+    branches:
+      - "master"
+    paths-ignore:
+      - "**/*.md"
 
 env:
   CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+  RUSTDOCFLAGS: -D warnings
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  ci:
+    name: Test
+    runs-on: ${{ matrix.job.os }}
     strategy:
       matrix:
-        toolchain:
-          - stable
-          - beta
-    runs-on: ubuntu-latest
-
+        job:
+          - os: macos-latest
+          - os: ubuntu-latest
+          - os: windows-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Just
+        uses: extractions/setup-just@v2
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: ${{ matrix.toolchain }}
-          components: rustfmt, clippy
-
-      - name: Format
-        run: cargo fmt --all -- --check
-
+          toolchain: stable
+          components: clippy, rustfmt
+      - name: Get build cache
+        uses: Swatinem/rust-cache@v2
       - name: Build
-        run: cargo build --verbose
-
-      - name: Run tests
-        run: cargo test
-
-      - name: Run clippy
-        run: cargo clippy -- -D warnings
+        run: just build
+      - name: Test
+        run: just test
+      - name: Lint
+        run: just lint
+      - name: Check formatting
+        run: just format
+      - name: Build Docs
+        run: just docs

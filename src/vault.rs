@@ -52,6 +52,7 @@ pub struct Vault {
 /// # Arguments
 /// - `vault_backup_contents` - JSON string containing vault backup, encrypted or not
 /// - `password_getter` - Password getter implementation. Used to get the password to decrypt the vault.
+///
 /// Required even if the vault is not encrypted.
 ///
 /// # Returns
