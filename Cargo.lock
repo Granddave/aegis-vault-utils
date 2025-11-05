@@ -29,7 +29,7 @@ dependencies = [
 
 [[package]]
 name = "aegis-vault-utils"
-version = "0.5.1"
+version = "0.5.2"
 dependencies = [
  "aes-gcm",
  "base64",
