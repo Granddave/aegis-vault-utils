@@ -1,11 +1,11 @@
-use aes_gcm::{aead::AeadMut, Aes256Gcm, KeyInit, Nonce};
-use base64::{engine::general_purpose, Engine as _};
-use color_eyre::eyre::{eyre, Result};
+use aes_gcm::{Aes256Gcm, KeyInit, Nonce, aead::AeadMut};
+use base64::{Engine as _, engine::general_purpose};
+use color_eyre::eyre::{Result, eyre};
 use hex::FromHex;
 use password_hash::Output;
 use scrypt::{
-    password_hash::{PasswordHasher, SaltString},
     Scrypt,
+    password_hash::{PasswordHasher, SaltString},
 };
 use serde::Deserialize;
 
@@ -85,7 +85,7 @@ fn decrypt_master_key(password: &str, slot: &Slot) -> Result<Vec<u8>, Decryption
         _ => {
             return Err(DecryptionError::ParamError(
                 "Slot is not a password slot".to_string(),
-            ))
+            ));
         }
     };
     let derived_key = derive_key(password.as_bytes(), password_slot)
@@ -104,6 +104,7 @@ fn decrypt_master_key(password: &str, slot: &Slot) -> Result<Vec<u8>, Decryption
 
     // Decrypt master key
     let mut cipher = Aes256Gcm::new(derived_key.as_bytes().into());
+    #[allow(deprecated)] // Allow from_slice until aes-gcm uses generic-array 1.x
     cipher
         .decrypt(Nonce::from_slice(&key_nonce), master_key_cipher.as_ref())
         .map_err(|_| DecryptionError::IncorrectPassword)
@@ -162,6 +163,7 @@ pub fn decrypt_database(password: &str, vault: Vault) -> Result<String> {
     // Decrypt database with master key
     let mut aes_context = Aes256Gcm::new(master_key.as_slice().into());
     let db_nonce = Vec::from_hex(&params.nonce)?;
+    #[allow(deprecated)] // Allow from_slice until aes-gcm uses generic-array 1.x
     let db_contents = aes_context
         .decrypt(Nonce::from_slice(&db_nonce), db_cipher.as_ref())
         .map_err(|e| eyre!("Failed to decrypt database: {}", e))?;

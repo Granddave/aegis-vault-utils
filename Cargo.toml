@@ -2,7 +2,7 @@
 name = "aegis-vault-utils"
 authors = ["David Isaksson <davidisaksson93@gmail.com>"]
 version = "0.5.1"
-edition = "2021"
+edition = "2024"
 license = "GPL-3.0-or-later"
 description = "Utility for interacting and generating OTP codes from the Android app Aegis Authenticator's backup vault"
 repository = "https://github.com/granddave/aegis-vault-utils/"
@@ -13,9 +13,9 @@ categories = ["authentication", "cryptography", "parsing"]
 aes-gcm = "0.10"
 base64 = "0.22"
 color-eyre = "0.6"
-hex = "0.4.3"
-libreauth = "0.17.0"
-password-hash = "0.5.0"
-scrypt = "0.11.0"
+hex = "0.4"
+libreauth = "0.18"
+password-hash = "0.5"
+scrypt = "0.11"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
